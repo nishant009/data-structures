@@ -61,7 +61,7 @@ def main():
     """Example invocation:
     python bfs.py --vertices='[1, 2, 3, 4, 5, 6]' \
         --edges='[(1, 2), (1, 5), (1, 6), (2, 3), (2, 5), (3, 4), (4, 5)]' \
-        --root=1
+        --root=1 --destination=4
     """
     parser = optparse.OptionParser()
     parser.add_option(
@@ -86,7 +86,7 @@ def main():
         action='store',
         dest='root',
         help='Root node of the graph',
-        default=[]
+        default=1
     )
 
     parser.add_option(
@@ -95,7 +95,7 @@ def main():
         action='store',
         dest='destination',
         help='Destination node in the graph for shortest path',
-        default=[]
+        default=2
     )
 
     options, _ = parser.parse_args()
