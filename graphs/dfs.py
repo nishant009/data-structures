@@ -3,6 +3,7 @@ import optparse
 from collections import defaultdict
 from graph import Graph
 
+
 class DFS(object):
     _UNDISCOVERED = 0
     _DISCOVERED = 1
@@ -17,9 +18,9 @@ class DFS(object):
 
     def do_dfs(self, g, u):
         self._state[u] = self._DISCOVERED
-        self._process_vertex(u)
-        self._entry[u] = self._time
         self._time += 1
+        self._entry[u] = self._time
+        self._process_vertex_early(u)
 
         for edge in g.get_edges(u):
             v = edge[g.KEY_END]
@@ -27,16 +28,26 @@ class DFS(object):
             if self._state[v] == self._UNDISCOVERED:
                 self._parent[v] = u
                 self.do_dfs(g, v)
-            
-        self._state[u] = self._PROCESSED
-        self._exit[u] = self._time
-        self._time += 1
 
-    def _process_vertex(self, v):
+        self._process_vertex_late(u)
+        self._time += 1
+        self._exit[u] = self._time
+        self._state[u] = self._PROCESSED
+
+    def _process_vertex_early(self, v):
+        return
+
+    def _process_vertex_late(self, v):
         return
 
     def _process_edge(self, u, v):
-        print(u, '-->', v)
+        if (self._state[v] == self._UNDISCOVERED) or (
+            self._state[v] == self._DISCOVERED
+            and u != self._parent[v]
+        ):
+            print(u, '-->', v)
+        else:
+            print(u, '---->', v)
 
 
 def main():
