@@ -10,18 +10,24 @@ class BFS(object):
 
     def __init__(self):
         self._parent = defaultdict(int)
+        self._level = {}
 
     def do_bfs(self, g, s):
         state = defaultdict(int)
         queue = deque()
 
         state[s] = self._DISCOVERED
+        self._level[s] = 0
         queue.append(s)
 
+        curr_level = 0
         while len(queue) > 0:
             u = queue.popleft()
             self._process_vertex_early(u)
             state[u] = self._PROCESSED
+
+            if curr_level != self._level[u]:
+                curr_level += 1
 
             for edge in g.get_edges(u):
                 v = edge[g.KEY_END]
@@ -34,6 +40,7 @@ class BFS(object):
                     queue.append(v)
                     state[v] = self._DISCOVERED
                     self._parent[v] = u
+                    self._level[v] = curr_level + 1
             self._process_vertex_late(u)
 
     def _process_vertex_early(self, v):
@@ -56,6 +63,9 @@ class BFS(object):
 
     def get_parents(self):
         return self._parent
+
+    def get_levels(self):
+        return self._level
 
 def main():
     """Example invocation:
@@ -115,6 +125,11 @@ def main():
 
     print('Shortest path for ', options.destination, ':')
     bfs.find_path(int(options.destination))
+
+    print('Levels: ')
+    levels = bfs.get_levels()
+    for key in levels:
+        print(key, ': ', levels[key])
 
 if __name__ == '__main__':
     main()

@@ -24,10 +24,12 @@ class DFS(object):
 
         for edge in g.get_edges(u):
             v = edge[g.KEY_END]
-            self._process_edge(u, v)
             if self._state[v] == self._UNDISCOVERED:
                 self._parent[v] = u
+                self._process_edge(u, v)
                 self.do_dfs(g, v)
+            elif self._state[v] != self._PROCESSED or g.is_directed():
+                self._process_edge(u, v)
 
         self._process_vertex_late(u)
         self._time += 1
@@ -41,12 +43,9 @@ class DFS(object):
         return
 
     def _process_edge(self, u, v):
-        if (self._state[v] == self._UNDISCOVERED) or (
-            self._state[v] == self._DISCOVERED
-            and u != self._parent[v]
-        ):
+        if (self._state[v] == self._UNDISCOVERED):
             print(u, '-->', v)
-        else:
+        elif v != self._parent[u]:
             print(u, '---->', v)
 
 
